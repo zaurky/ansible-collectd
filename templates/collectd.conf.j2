@@ -1,0 +1,50 @@
+# Config file for collectd(1).
+#
+# Some plugins need additional configuration and are disabled by default.
+# Please read collectd.conf(5) for details.
+#
+# You should also read /usr/share/doc/collectd-core/README.Debian.plugins
+# before enabling any more plugins.
+
+Hostname "{{ inventory_hostname }}"
+FQDNLookup true
+LoadPlugin syslog
+
+<Plugin syslog>
+	LogLevel info
+</Plugin>
+
+LoadPlugin cpu
+LoadPlugin df
+LoadPlugin disk
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin network
+LoadPlugin nfs
+LoadPlugin processes
+LoadPlugin rrdtool
+LoadPlugin uptime
+LoadPlugin users
+
+
+<Plugin df>
+    FSType "rootfs"
+    IgnoreSelected true
+</Plugin>
+
+<Plugin network>
+	<Server "{{ server_ip }}" "{{ server_port }}">
+		Username "{{ username }}"
+		Password "{{ password }}"
+		Interface "eth0"
+	</Server>
+</Plugin>
+
+<Plugin rrdtool>
+	DataDir "/var/lib/collectd/rrd"
+</Plugin>
+
+
+Include "/etc/collectd/filters.conf"
+Include "/etc/collectd/thresholds.conf"

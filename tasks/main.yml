@@ -1,0 +1,14 @@
+---
+# configure collectd
+
+- name: Install collectd
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - collectd
+
+- name: Copy config
+  template: src=collectd.conf.j2 dest=/etc/collectd/collectd.conf owner=root mode=0755
+  notify: Restart collectd service
+
+- name: Clean default files
+  file: dest=/var/lib/collectd/rrd/localhost/ state=absent
